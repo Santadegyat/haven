@@ -35,7 +35,7 @@
     /** Replaces the map search for the venue's address; ignored until there is
      * a venue to show. */
     venueLink?: string;
-    /** Shows a "Hack Club × partner" lockup above the logo. */
+    /** Adds "× partner" after the ribbon of the logo. */
     partner?: Partner;
     images?: SiteImages;
   }
@@ -141,53 +141,6 @@
   );
 </script>
 
-{#snippet lockup(partner: Partner, cls: string)}
-  <div
-    class="pointer-events-auto flex items-center gap-[clamp(0.75rem,1.25vw,1.75rem)] {cls}"
-  >
-    <a
-      href="https://hackclub.com/"
-      target="_blank"
-      rel="noopener noreferrer"
-      class="transition-opacity hover:opacity-80"
-    >
-      <img
-        src="/images/partners/hack-club.svg"
-        alt="Hack Club"
-        width="526"
-        height="184"
-        class="h-[2.25rem] w-auto sm:h-[clamp(1.75rem,3.25vw,4.5rem)]"
-      />
-    </a>
-    <!-- Drawn, since the display font has no × glyph. -->
-    <svg
-      viewBox="0 0 24 24"
-      aria-hidden="true"
-      fill="none"
-      stroke="currentColor"
-      stroke-width="3.5"
-      stroke-linecap="round"
-      class="size-[clamp(0.875rem,1.25vw,1.75rem)] shrink-0 text-white"
-    >
-      <path d="M5 5l14 14M19 5L5 19" />
-    </svg>
-    <a
-      href={partner.href}
-      target="_blank"
-      rel="noopener noreferrer"
-      class="transition-opacity hover:opacity-80"
-    >
-      <img
-        src={partner.logo}
-        alt={partner.name}
-        width={partner.width}
-        height={partner.height}
-        class="h-[2.75rem] w-auto sm:h-[clamp(2.25rem,3.75vw,5.25rem)]"
-      />
-    </a>
-  </div>
-{/snippet}
-
 <svelte:window onscroll={() => (scrolled = window.scrollY > 10)} />
 
 <svelte:head>
@@ -200,34 +153,54 @@
   class="rule-frame relative flex min-h-svh flex-col bg-haven-green bg-cover bg-top bg-no-repeat px-4 pb-[36vw] sm:pb-[clamp(3rem,10vw,min(8rem,8svh))] [--frame-gap:clamp(0.75rem,1.1vw,1rem)] [--frame-offset:clamp(0.5rem,1.1vw,1rem)] [--frame-weight:clamp(3px,0.35vw,5px)]"
 >
   <div class={poc ? "hidden" : "block sm:contents"}>
-    <!-- Out of the flow from md up: on a short window the left column
-         already fills the hero, so anything stacked above the logo pushes the
-         signup box off the first screen. The top middle is always free. -->
-    {#if partner}
-      {@render lockup(
-        partner,
-        "absolute left-1/2 top-[calc(var(--frame-offset)+var(--frame-weight)+var(--frame-gap))] z-25 hidden -translate-x-1/2 md:flex",
-      )}
-    {/if}
-
     <div
       class="pointer-events-none relative z-25 flex flex-1 items-center justify-center mt-[clamp(5rem,14vw,20rem)] sm:mt-[clamp(1rem,2vw,15rem)]"
     >
       <div
         class="mx-auto flex w-full flex-col items-center px-[clamp(1rem,4vw,8rem)] text-center sm:pl-[clamp(1rem,4vw,8rem)] sm:items-start sm:pr-[clamp(20rem,45vw,60rem)]"
       >
-        {#if partner}
-          {@render lockup(partner, "mb-4 md:hidden")}
-        {/if}
-
         <div class="grid grid-cols-2 max-w-[1700px]">
-          <img
-            src={images.logo}
-            alt="Hack Club Haven"
-            width="778"
-            height="445"
-            class="w-[120%] max-w-none"
-          />
+          <div class="relative w-[120%] max-w-none">
+            <img
+              src={images.logo}
+              alt="Hack Club Haven"
+              width="778"
+              height="445"
+              class="w-full"
+            />
+            {#if partner}
+              <!-- Hangs off the end of the logo's ribbon, so it reads
+                   "Hack Club × partner" without adding any height. Sized as a
+                   share of the logo's width so it scales with it; container
+                   units would need containment, which collapses the logo. -->
+              <a
+                href={partner.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="pointer-events-auto absolute left-[97%] top-[25%] flex w-[28%] -translate-y-1/2 sm:w-[20%] items-center gap-[12.5%] transition-opacity hover:opacity-80"
+              >
+                <!-- Drawn, since the display font has no × glyph. -->
+                <svg
+                  viewBox="0 0 24 24"
+                  aria-hidden="true"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="3.5"
+                  stroke-linecap="round"
+                  class="h-auto w-[25%] shrink-0 text-white"
+                >
+                  <path d="M5 5l14 14M19 5L5 19" />
+                </svg>
+                <img
+                  src={partner.logo}
+                  alt={partner.name}
+                  width={partner.width}
+                  height={partner.height}
+                  class="h-auto w-[62.5%] max-w-none"
+                />
+              </a>
+            {/if}
+          </div>
           <h1
             class="m-0 font-display text-[clamp(1rem,8vw,10rem)] leading-[clamp(1rem,6vw,8rem)]  text-white translate-y-[75%] translate-x-[-10%] sm:text-hero sm:leading-[clamp(1rem,4vw,8rem)]"
           >

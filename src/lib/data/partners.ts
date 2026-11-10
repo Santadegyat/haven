@@ -1,6 +1,6 @@
 /**
- * A partner co-branding some city pages: its logo sits next to Hack Club's at
- * the top of the hero, as "Hack Club × <partner>".
+ * A partner co-branding some city pages: its logo hangs off the end of the
+ * "Hack Club" ribbon in the Haven logo, as "Hack Club × <partner>".
  */
 export interface Partner {
   name: string;
